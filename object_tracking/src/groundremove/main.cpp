@@ -65,15 +65,15 @@ void filter_mid_area_limitation()
   //GE greater than or equal
   //LE less than
   pcl::ConditionAnd<pcl::PointXYZ>::Ptr range_cond(new pcl::ConditionAnd<pcl::PointXYZ>);
-  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_1(new pcl::FieldComparison<pcl::PointXYZ>("x", pcl::ComparisonOps::GT, -50));  // 添加在x字段上大于-15的比较算子
+  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_1(new pcl::FieldComparison<pcl::PointXYZ>("x", pcl::ComparisonOps::GT, -10));  // 添加在x字段上大于-15的比较算子
   range_cond->addComparison(cond_1);
-  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_2(new pcl::FieldComparison<pcl::PointXYZ>("x", pcl::ComparisonOps::LT, 50)); //添加在x字段上小于5的比较算子
+  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_2(new pcl::FieldComparison<pcl::PointXYZ>("x", pcl::ComparisonOps::LT, 10)); //添加在x字段上小于5的比较算子
   range_cond->addComparison(cond_2);
 
-  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_3(new pcl::FieldComparison<pcl::PointXYZ>("y", pcl::ComparisonOps::GT, -15));
+  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_3(new pcl::FieldComparison<pcl::PointXYZ>("y", pcl::ComparisonOps::GT, -10));
   range_cond->addComparison(cond_3);
 
-  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_4(new pcl::FieldComparison<pcl::PointXYZ>("y", pcl::ComparisonOps::LT, 15));
+  pcl::FieldComparison<pcl::PointXYZ>::ConstPtr cond_4(new pcl::FieldComparison<pcl::PointXYZ>("y", pcl::ComparisonOps::LT, 10));
   range_cond->addComparison(cond_4);
 
   condrem.setCondition(range_cond);  // 删除点云中不符合用户指定的多个条件的数据点。
@@ -142,16 +142,17 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
 //订阅者 ： "velodyne_points"  "/kitti/velo/pointcloud" --话题名(可以根据不同数据集修改话题名)   cloud_cb--回调函数   
-  ros::Subscriber sub = nh.subscribe("/kitti/velo/pointcloud", 160, cloud_cb);   // kitti
+  ros::Subscriber sub = nh.subscribe("/velodyne_points", 160, cloud_cb);   // kitti
   // ros::Subscriber sub = nh.subscribe("velodyne_points", 160, cloud_cb);   // changshu.bag
-  nh.param<float>("filter_z_max", filter_z_max, 1.0);                   // 参数服务器默认参数（z轴上的滤波）
-  nh.param<float>("filter_z_min", filter_z_min, -3.0);                  // nh.param<std::string>("default_param", default_param, "default_value");
+  nh.param<float>("filter_z_max", filter_z_max, 0);                   // 参数服务器默认参数（z轴上的滤波）
+  nh.param<float>("filter_z_min", filter_z_min, -0.18);                  // nh.param<std::string>("default_param", default_param, "default_value");
   filter_mid_area_limitation();                                         //  //创建条件限定下的滤波器
 
   // Create a ROS publisher for the output point cloud
   ground_pub = nh.advertise<sensor_msgs::PointCloud2>("ground_topic", 1);
   none_ground_pub = nh.advertise<sensor_msgs::PointCloud2>("none_ground_topic", 1);
   auxpoint_pub = nh.advertise<sensor_msgs::PointCloud2>("aux_points", 1);
+
   // Spin
   ros::spin();
 }

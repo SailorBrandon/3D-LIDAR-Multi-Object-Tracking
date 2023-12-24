@@ -10,9 +10,9 @@
 using namespace std;
 using namespace pcl;
 
-const int numGrid = 250;
+const int numGrid = 200;
 
-const float grid_size = 0.2;     // 
+const float grid_size = 0.05;     // 10 / 250
 
 extern float roiM;
 extern int kernelSize;

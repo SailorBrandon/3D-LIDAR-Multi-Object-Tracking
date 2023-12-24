@@ -15,12 +15,12 @@
 	output= "screen"
 	required = "true">
    </node>
-   <node
+   <!-- <node
 	name= "tracking" 
 	pkg= "object_tracking"
 	type="tracking"
 	output= "screen"
 	required = "true">
-   </node>
+   </node> -->
 
 </launch>

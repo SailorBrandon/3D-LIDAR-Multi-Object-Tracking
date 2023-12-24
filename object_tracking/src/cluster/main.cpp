@@ -176,7 +176,7 @@ void  cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input){  // f非地面�
 //*********************************************bBoxes visualization***************************************
 
   visualization_msgs::Marker line_list; //将候选框8个点连线
-  line_list.header.frame_id = "velo_link";   // 定义frame_id (rviz需要设置世界坐标系为velo_link)
+  line_list.header.frame_id = none_ground_cloud->header.frame_id;   // 定义frame_id (rviz需要设置世界坐标系为velo_link)
   line_list.header.stamp = ros::Time::now();
   line_list.ns =  "boxes";
   line_list.action = visualization_msgs::Marker::ADD;
@@ -185,7 +185,7 @@ void  cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input){  // f非地面�
   line_list.type = visualization_msgs::Marker::LINE_LIST; //线条序列  type设置类型
 
   //LINE_LIST markers use only the x component of scale, for the line width  仅将比例的x分量用于线宽
-  line_list.scale.x = 0.1;
+  line_list.scale.x = 0.01;
   // Points are green
   line_list.color.g = 1.0f;   // 边框绿色
   line_list.color.a = 1.0;
@@ -239,12 +239,12 @@ int main (int argc, char** argv){
   ros::init (argc, argv, "cluster");  // "cluster"--节点名
   ros::NodeHandle nh;
 
-  ros::Subscriber sub = nh.subscribe ("none_ground_topic", 160, cloud_cb);  //订阅者  none_ground_topic -- 话题topic名
+  ros::Subscriber sub = nh.subscribe ("aux_points", 160, cloud_cb);  //订阅者  none_ground_topic -- 话题topic名
 
   // Create a ROS publisher for the output point cloud
   pub = nh.advertise<sensor_msgs::PointCloud2> ("output", 1);  //发布者  output -- 话题topic名
 
-  vis_pub = nh.advertise<visualization_msgs::Marker>( "visualization_marker", 0 );  //发布者  visualization_marker -- 话题topic名  候选框
+  vis_pub = nh.advertise<visualization_msgs::Marker>( "bbox_vis", 0 );  //发布者  visualization_marker -- 话题topic名  候选框
   marker_array_pub_ = nh.advertise<visualization_msgs::MarkerArray>("cluster_ma", 10);   //发布者  cluster_ma -- 话题topic名  实体框
   g_costmap_pub = nh.advertise<nav_msgs::OccupancyGrid>("realtime_cost_map", 10);    //全局代价地图？？ 发布者  realtime_cost_map -- 话题topic名
 
